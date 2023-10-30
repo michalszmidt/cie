@@ -1,0 +1,12 @@
+settings:
+  timezone: "UTC"
+
+to_remove:
+  - 
+    regex: "^STH"
+    key: "SUMMARY"
+  - 
+    regex: "[a-b]"
+    key: "SUMMARY"
+
+# to_move:
