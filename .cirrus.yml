@@ -3,7 +3,7 @@ task:
   only_if: $CIRRUS_BRANCH == 'master'
   only_if: $CIRRUS_RELEASE != ''
   env:
-    GITHUB_TOKEN: ENCRYPTED[c55719815e6b9431df4596dc746645ece3acbd2917ffa29c71a1636d232aa77b7a3684b31667de46f028ca594d7a4b20]
+    GITHUB_TOKEN: ENCRYPTED[09aebd5de67bdb9b4fac7bad850ae6b2e2f4872d863c30b680dd7e8ef6d966b85bbb5589b44d5da20d39444cdf903431]
     CARGO_TERM_COLOR: always
   arm_container:
     image: fedora:latest
@@ -38,7 +38,7 @@ task:
   only_if: $CIRRUS_BRANCH == 'master'
   only_if: $CIRRUS_RELEASE != ''
   env:
-    GITHUB_TOKEN: ENCRYPTED[c55719815e6b9431df4596dc746645ece3acbd2917ffa29c71a1636d232aa77b7a3684b31667de46f028ca594d7a4b20]
+    GITHUB_TOKEN: ENCRYPTED[09aebd5de67bdb9b4fac7bad850ae6b2e2f4872d863c30b680dd7e8ef6d966b85bbb5589b44d5da20d39444cdf903431]
     CARGO_TERM_COLOR: always
   arm_container:
     image: alpine:latest
@@ -68,7 +68,7 @@ task:
   only_if: $CIRRUS_BRANCH == 'master'
   only_if: $CIRRUS_RELEASE != ''
   env:
-    GITHUB_TOKEN: ENCRYPTED[c55719815e6b9431df4596dc746645ece3acbd2917ffa29c71a1636d232aa77b7a3684b31667de46f028ca594d7a4b20]
+    GITHUB_TOKEN: ENCRYPTED[09aebd5de67bdb9b4fac7bad850ae6b2e2f4872d863c30b680dd7e8ef6d966b85bbb5589b44d5da20d39444cdf903431]
     CARGO_TERM_COLOR: always
   freebsd_instance:
     image_family: freebsd-13-2
@@ -104,7 +104,7 @@ task:
   only_if: $CIRRUS_BRANCH == 'master'
   only_if: $CIRRUS_RELEASE != ''
   env:
-    GITHUB_TOKEN: ENCRYPTED[c55719815e6b9431df4596dc746645ece3acbd2917ffa29c71a1636d232aa77b7a3684b31667de46f028ca594d7a4b20]
+    GITHUB_TOKEN: ENCRYPTED[09aebd5de67bdb9b4fac7bad850ae6b2e2f4872d863c30b680dd7e8ef6d966b85bbb5589b44d5da20d39444cdf903431]
     CARGO_TERM_COLOR: always
   macos_instance:
     image: ghcr.io/cirruslabs/macos-ventura-base:latest
