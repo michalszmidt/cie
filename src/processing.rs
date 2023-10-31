@@ -1,10 +1,16 @@
+use std::borrow::BorrowMut;
 use std::collections::HashSet;
 use std::fs::{read_to_string, File};
 use std::io::{self, BufWriter, Write};
 use std::str::FromStr;
 
-use icalendar::{Calendar, Component};
-use rayon::prelude::{IntoParallelRefIterator, ParallelIterator};
+use chrono::{DateTime, Datelike, Duration};
+// use chrono::{self, DateTime, TimeZone};
+// use chrono_tz::{self, UTC};
+// use dateparser::*;
+
+use icalendar::{Calendar, Component, EventLike};
+use rayon::prelude::{IntoParallelRefIterator, IntoParallelRefMutIterator, ParallelIterator};
 use regex::Regex;
 
 use crate::structs::CIE;
@@ -29,6 +35,7 @@ pub fn process(path: String, config: String, out: String) -> usize {
     let cie_yaml = &cie_yaml_exact.unwrap();
 
     let to_remove = cie_yaml.clone().to_remove;
+    let to_move = cie_yaml.clone().to_move;
 
     ical.components.retain(|x| match x.as_event() {
         Some(event) => {
@@ -49,6 +56,40 @@ pub fn process(path: String, config: String, out: String) -> usize {
         }
         None => true,
     });
+
+    //Must operate on events clones
+    // Below wont work.
+    ical.components
+        .iter_mut()
+        .filter_map(|x| x.as_event())
+        .for_each(|event| {
+            to_move.iter().for_each(|remove_rule| {
+                let time: DateTime<_> = event.clone().get_timestamp().unwrap();
+
+                let rule = Regex::new(&remove_rule.regex).unwrap();
+                let value = event
+                    .clone()
+                    .property_value(&remove_rule.key)
+                    .unwrap()
+                    .to_string();
+
+                if rule.is_match(value.as_str()) {
+                    if remove_rule.at_weekday.as_str() == ""
+                        || remove_rule.at_weekday.as_str()
+                            == time.weekday().to_string().to_lowercase().as_str()
+                    {
+                        let duration = match remove_rule.duration_unit.as_str() {
+                            "h" => Duration::hours(remove_rule.duration.parse().unwrap()),
+                            "m" => Duration::minutes(remove_rule.duration.parse().unwrap()),
+                            _ => Duration::hours(remove_rule.duration.parse().unwrap()),
+                        };
+
+                        time.checked_add_signed(duration);
+                        event.starts(time);
+                    }
+                }
+            })
+        });
 
     ical = ical.done();
 

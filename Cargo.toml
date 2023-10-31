@@ -19,3 +19,6 @@ serde = { version="*", features = ["derive"]}                        # Apache 2.
 serde_yaml = "*"      
 rayon = "*"                                                           # Apache 2.0 / MIT
 icalendar = {version = "*", features = ['parser']}
+chrono = "*"
+# chrono-tz = "*"
+# dateparser = "*"

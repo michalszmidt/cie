@@ -19,4 +19,13 @@
 cie is a simple CLI ICal editor managed by yaml
 
 
+# Installation
+Download from release page
 
+# Usage scenario
+You have fixed schedule exported to ics but you made some unofficial modifications to it that are not covered by the issuer.
+So you set up cron job to:
+1. fetch ics
+2. `cie` thath makes modifications 
+
+it produces another ics that you expose a path to on your server so, your clients can fetch modified one.

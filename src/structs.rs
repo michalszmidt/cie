@@ -4,7 +4,8 @@ use serde::Deserialize;
 pub struct CIE {
     pub settings: Settings,
     pub to_remove: Vec<REMOVE>,
-    // pub to_move: Vec<MOVE>,
+    pub to_move: Vec<MOVE>,
+    // pub to_modify: Vec<MODIFY>,
 }
 
 #[derive(Clone, Deserialize)]
@@ -18,10 +19,19 @@ pub struct REMOVE {
     pub key: String,
 }
 
+#[derive(Clone, Deserialize)]
+pub struct MOVE {
+    pub regex: String,
+    pub key: String,
+    pub duration: String, // https://github.com/waltzofpearls/dateparser/tree/main#accepted-date-formats
+    pub duration_unit: String,
+    pub at_weekday: String,
+}
+
 // #[derive(Clone, Deserialize)]
-// pub struct MOVE {
+// pub struct MODIFY {
 //     pub regex: String,
 //     pub key: String,
-//     pub start_time: String, // hr:min
-//     pub end_time: String,   // hr:min
+//     pub action: String,
+//     pub action_key: String,
 // }

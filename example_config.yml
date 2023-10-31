@@ -1,5 +1,5 @@
 settings:
-  timezone: "UTC"
+  timezone: "utc" # Possible chocices are: utc | local | tzformat Like "Europe/Amsterdam"
 
 to_remove:
   - 
@@ -9,4 +9,8 @@ to_remove:
     regex: "[a-b]"
     key: "SUMMARY"
 
-# to_move:
+to_move:
+  - 
+    regex: "[a-b]"
+    key: "SUMMARY"
+    weekday: "Tue"
