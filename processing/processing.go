@@ -2,6 +2,7 @@ package processing
 
 import (
 	"fmt"
+	// "log"
 	"os"
 	"regexp"
 	"strings"
@@ -29,43 +30,41 @@ func Process(path *string, out *string, cie *CIE) uint64 {
 	}
 
 	// eventstodelete := make([]int, 0)
-	
-	
 
+	From[*VEvent](events, 0).
+		Filter(
+			func(event *VEvent) bool {
 
-	From[*VEvent](events, 0).Filter(
-		func(event *VEvent) bool {
-			setOfTrue := Map(From[RemoveRule](cie.ToRemove.Rules, 0).
-				Filter(func(rule RemoveRule) bool {
-					for _, property := range event.ComponentBase.Properties {
-						if strings.Compare(property.BaseProperty.IANAToken , rule.KeyName) == 0 {
-							return true
+				setOfTrue := Map(From[RemoveRule](cie.ToRemove.Rules, 0).
+					Filter(func(rule RemoveRule) bool {
+						for _, property := range event.ComponentBase.Properties {
+							if strings.Compare(property.BaseProperty.IANAToken, rule.KeyName) == 0 {
+								return true
+							}
 						}
-					}
+						return false
+					}),
+					func(rule RemoveRule) bool {
+						rgx := regexp.MustCompile(rule.Regex)
+						var name string
+
+						for _, property := range event.ComponentBase.Properties {
+							if strings.Compare(property.BaseProperty.IANAToken, rule.KeyName) == 0 {
+								name = property.Value
+								break
+							}
+						}
+						return rgx.MatchString(name)
+					},
+				).Stream().ToDistinct()
+
+				if setOfTrue.Contains(true) {
+					counter++
 					return false
-				}),
-				func(rule RemoveRule) bool {
-					rgx := regexp.MustCompile(rule.Regex)
-					var name string
-
-					for _, property := range event.ComponentBase.Properties {
-						if strings.Compare(property.BaseProperty.IANAToken, rule.KeyName) == 0	{
-							name = property.Value
-							break
-						}
-					}
-					return rgx.MatchString(name)
-				},
-			).Stream().ToDistinct()
-
-			if setOfTrue.Contains(true) {
-				counter++
-				return false
-			}
-			// fmt.Println(setOfTrue.Contains(true))
-			return true
-		}).ForEach(func(event *VEvent) {
-		// fmt.Println(event.ComponentBase.Prop	erties		)
+				}
+				// fmt.Println(setOfTrue.Contains(true))
+				return true
+			}).ForEach(func(event *VEvent) {
 		newCalendar.AddVEvent(event)
 	})
 

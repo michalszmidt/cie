@@ -1,4 +1,5 @@
 to_remove:
-  - 
-    regex: "AM*"    
-    key_name: "SUMMARY"     
+  rules:
+    -
+     regex: "AM\ -\ .?"    
+     key_name: "SUMMARY"

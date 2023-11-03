@@ -13,6 +13,8 @@ type CIE struct {
 	ToRemove ToRemove `yaml:"to_remove"`
 }
 
+// `yaml:"cie"`
+
 type ToRemove struct {
 	Rules []RemoveRule `yaml:"rules"`
 }
@@ -21,5 +23,3 @@ type RemoveRule struct {
 	Regex   string `yaml:"regex"`
 	KeyName string `yaml:"key_name"`
 }
-
-

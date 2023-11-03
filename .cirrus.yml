@@ -11,23 +11,16 @@ task:
     - whoami
     - dnf check-update -q && dnf up -q -y
     - dnf group install -y "C Development Tools and Libraries" "Development Tools"
-    - dnf in -y curl
-    - curl https://sh.rustup.rs -sSf | sh -s -- -y
-    - . $HOME/.cargo/env
-    - cargo install cargo-auditable cargo-audit
+    - dnf in -y curl golang
   build_script:
     - whoami
-    - . $HOME/.cargo/env
     - ls -lah
-    - rustc --version
-    - cargo auditable build --release --locked
+    - go --version
+    - go build -o cie-linux-glibc-aarch64
   hash_script:
     - whoami
     - ls -lah
-    - cd target/release
-    - mv cie cie-linux-glibc-aarch64
     - sha256sum cie-linux-glibc-aarch64 > sha256-cie-linux-glibc-aarch64
-    - mv cie-linux-glibc-aarch64 ../../ && mv sha256-cie-linux-glibc-aarch64 ../../
   upload_script:
     - whoami
     - ls -lah
@@ -44,20 +37,16 @@ task:
     image: alpine:latest
   prepare_script:
     - apk -U upgrade
-    - apk add curl make pkgconf bash build-base rust cargo
-    - cargo install cargo-auditable cargo-audit
+    - apk add curl make pkgconf bash build-base go
   build_script:
     - whoami
     - ls -lah
-    - rustc --version
-    - export PATH="$PATH:$HOME/.cargo/bin"
-    - cargo auditable build --release --locked
+    - go --version
+    - go build -o cie-linux-musl-aarch64
   hash_script:
     - whoami
-    - cd target/release
-    - mv cie cie-linux-musl-aarch64
+    - ls -lah
     - sha256sum cie-linux-musl-aarch64 > sha256-cie-linux-musl-aarch64
-    - mv cie-linux-musl-aarch64 ../../ && mv sha256-cie-linux-musl-aarch64 ../../
   upload_script:
     - whoami
     - ls -lah
@@ -78,22 +67,16 @@ task:
     - cp ./FreeBSD.conf /usr/local/etc/pkg/repos/
     - pkg update
     - pkg upgrade -y
-    - pkg install -y curl pkgconf bash
-    - curl https://sh.rustup.rs -sSf | sh -s -- -y
-    - . $HOME/.cargo/env
-    - cargo install cargo-auditable cargo-audit
+    - pkg install -y curl pkgconf bash go
   build_script:
     - whoami
-    - . $HOME/.cargo/env
     - ls -lah
-    - rustc --version
-    - cargo auditable build --release --locked
+    - go --version
+    - go build -o cie-freebsd-amd64
   hash_script:
     - whoami
-    - cd target/release
-    - mv cie cie-freebsd-amd64
+    - ls -lah
     - sha256sum cie-freebsd-amd64 > sha256-cie-freebsd-amd64
-    - mv cie-freebsd-amd64 ../../ && mv sha256-cie-freebsd-amd64 ../../
   upload_script:
     - whoami
     - ls -lah
@@ -113,22 +96,16 @@ task:
     - NONINTERACTIVE=1 brew update
     - NONINTERACTIVE=1 brew outdated
     - NONINTERACTIVE=1 brew upgrade
-    - NONINTERACTIVE=1 brew install pkg-config make curl coreutils
-    - curl https://sh.rustup.rs -sSf | sh -s -- -y
-    - . $HOME/.cargo/env
-    - cargo install cargo-auditable cargo-audit
+    - NONINTERACTIVE=1 brew install pkg-config make curl coreutils go
   build_script:
     - whoami
-    - . $HOME/.cargo/env
     - ls -lah
-    - rustc --version
-    - cargo auditable build --release --locked
+    - go --version
+    - go build -o cie-macosx-silicon
   hash_script:
     - whoami
-    - cd target/release
-    - mv cie cie-macosx-silicon
+    - ls -lah
     - sha256sum cie-macosx-silicon > sha256-cie-macosx-silicon
-    - mv cie-macosx-silicon ../../ && mv sha256-cie-macosx-silicon ../../
   upload_script:
     - whoami
     - ls -lah

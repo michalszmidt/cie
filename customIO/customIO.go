@@ -1,17 +1,27 @@
 package customIO
 
 import (
-    . "github.com/michalszmidt/cie/objects"
-    "gopkg.in/yaml.v3"
-        "io/ioutil"
-    "os"
-    )
+	"io/ioutil"
+	"log"
 
-func  PathToYaml(path string) CIE {
-    var cie CIE     
-    file, _ := os.Open(path)
-    defer file.Close()
-    data, _ := ioutil.ReadAll(file)
-    yaml.Unmarshal(data, cie)
-    return cie
+	. "github.com/michalszmidt/cie/objects"
+	"gopkg.in/yaml.v3"
+)
+
+func PathToYaml(path string) CIE {
+	yfile, err := ioutil.ReadFile(path)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	var cie CIE
+
+	err = yaml.Unmarshal(yfile, &cie)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	return cie
 }

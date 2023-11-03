@@ -3,6 +3,8 @@
 
 cie
 
+.lapce 
+
 # Vim
 *.swp
 *.swn
@@ -40,6 +42,9 @@ vendor/
 
 # Redis
 *.rdb
+
+target
+target/*
 
 .
 *.ics

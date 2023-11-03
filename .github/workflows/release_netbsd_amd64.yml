@@ -1,0 +1,51 @@
+name: Release for NetBSD amd64
+
+on:
+  push:
+    tags:
+      - '*'
+      
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  test:
+    runs-on: macos-12
+    name: Release for NetBSD
+    steps:
+    - uses: actions/checkout@v3
+    - name: Build in NetBSD VM
+      id: compile
+      uses: vmactions/netbsd-vm@v0
+      with:
+        envs: 'CARGO_TERM_COLOR'
+        usesh: false
+        mem: 8192        
+        prepare: |
+          whoami
+          export PKG_PATH="http://cdn.netbsd.org/pub/pkgsrc/packages/NetBSD/amd64/.$(uname -r | cut -d '.' -f 1).0_current/All/"
+          /usr/sbin/pkg_add -v pkgin
+          pkgin update
+          pkgin -y upgrade
+          pkgin -y install curl pkgconf coreutils p5-Digest-SHA3 mozilla-rootcerts-openssl ca-certificates go
+        run: |
+          whoami
+          ls -lah
+          go --version
+          go build -o cie-netbsd-amd64
+          shasum -a 256 cie-netbsd-amd64 > sha256-cie-netbsd-amd64
+          
+    - name: Upload binaries to release
+      uses: svenstaro/upload-release-action@v2
+      with:
+        repo_token: ${{ secrets.GITHUB_TOKEN }}
+        file: target/release/cie-netbsd-amd64
+        asset_name: cie-netbsd-amd64
+        tag: ${{ github.ref }}
+    - name: Upload binaries to release
+      uses: svenstaro/upload-release-action@v2
+      with:
+        repo_token: ${{ secrets.GITHUB_TOKEN }}
+        file: target/release/sha256-cie-netbsd-amd64
+        asset_name: sha256-cie-netbsd-amd64
+        tag: ${{ github.ref }}
