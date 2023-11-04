@@ -19,7 +19,7 @@ jobs:
       run: |
           whoami
           apk add curl make pkgconf bash build-base go
-          go --version
+          go version
           go build -o cie-linux-musl-amd64
           sha256sum cie-linux-musl-amd64 > sha256-cie-linux-musl-amd64
           

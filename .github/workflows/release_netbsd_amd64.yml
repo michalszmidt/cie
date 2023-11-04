@@ -31,7 +31,7 @@ jobs:
         run: |
           whoami
           ls -lah
-          go --version
+          go version
           go build -o cie-netbsd-amd64
           shasum -a 256 cie-netbsd-amd64 > sha256-cie-netbsd-amd64
           

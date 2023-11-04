@@ -15,7 +15,7 @@ task:
   build_script:
     - whoami
     - ls -lah
-    - go --version
+    - go version
     - go build -o cie-linux-glibc-aarch64
   hash_script:
     - whoami
@@ -41,7 +41,7 @@ task:
   build_script:
     - whoami
     - ls -lah
-    - go --version
+    - go version
     - go build -o cie-linux-musl-aarch64
   hash_script:
     - whoami
@@ -71,7 +71,7 @@ task:
   build_script:
     - whoami
     - ls -lah
-    - go --version
+    - go version
     - go build -o cie-freebsd-amd64
   hash_script:
     - whoami
@@ -100,7 +100,7 @@ task:
   build_script:
     - whoami
     - ls -lah
-    - go --version
+    - go version
     - go build -o cie-macosx-silicon
   hash_script:
     - whoami
