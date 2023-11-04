@@ -1,9 +1,11 @@
 name: Release for Windows aarch64
 
-on:
-  push:
-    tags:
-      - '*'
+#on:
+#  push:
+#    tags:
+#      - '*'
+
+on: workflow_dispatch
 
 env:
   CARGO_TERM_COLOR: always
