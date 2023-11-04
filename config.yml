@@ -1,5 +1,0 @@
-to_remove:
-  rules:
-    -
-     regex: "AM\ -\ .?"    
-     key_name: "SUMMARY"
