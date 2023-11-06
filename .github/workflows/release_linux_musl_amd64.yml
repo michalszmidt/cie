@@ -20,20 +20,20 @@ jobs:
           whoami
           apk add curl make pkgconf bash build-base go
           go version
-          go build -o cie-linux-musl-amd64
+          go build -ldflags="-s -w" -o cie-linux-musl-amd64
           sha256sum cie-linux-musl-amd64 > sha256-cie-linux-musl-amd64
           
     - name: Upload binaries to release
       uses: svenstaro/upload-release-action@v2
       with:
         repo_token: ${{ secrets.GITHUB_TOKEN }}
-        file: target/release/cie-linux-musl-amd64
+        file: cie-linux-musl-amd64
         asset_name: cie-linux-musl-amd64
         tag: ${{ github.ref }}
     - name: Upload checksum to release
       uses: svenstaro/upload-release-action@v2
       with:
         repo_token: ${{ secrets.GITHUB_TOKEN }}
-        file: target/release/sha256-cie-linux-musl-amd64
+        file: sha256-cie-linux-musl-amd64
         asset_name: sha256-cie-linux-musl-amd64
         tag: ${{ github.ref }}

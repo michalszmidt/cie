@@ -21,20 +21,20 @@ jobs:
           dnf group install -y "C Development Tools and Libraries" "Development Tools"
           dnf in -y curl go
           go version
-          go build -o cie-linux-glibc-amd64
+          go build -ldflags="-s -w" -o cie-linux-glibc-amd64
           sha256sum cie-linux-glibc-amd64 > sha256-cie-linux-glibc-amd64
           
     - name: Upload binaries to release
       uses: svenstaro/upload-release-action@v2
       with:
         repo_token: ${{ secrets.GITHUB_TOKEN }}
-        file: target/release/cie-linux-glibc-amd64 
+        file: cie-linux-glibc-amd64 
         asset_name: cie-linux-glibc-amd64 
         tag: ${{ github.ref }}
     - name: Upload checksum to release
       uses: svenstaro/upload-release-action@v2
       with:
         repo_token: ${{ secrets.GITHUB_TOKEN }}
-        file: target/release/sha256-cie-linux-glibc-amd64
+        file: sha256-cie-linux-glibc-amd64
         asset_name: sha256-cie-linux-glibc-amd64
         tag: ${{ github.ref }}
