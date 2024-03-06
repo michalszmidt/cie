@@ -2,7 +2,6 @@ package processing
 
 import (
 	"fmt"
-	// "log"
 	"os"
 	"regexp"
 	"strings"
@@ -29,73 +28,54 @@ func Process(path *string, out *string, cie *CIE) uint64 {
 		fmt.Println("{}", err)
 	}
 
-	// eventstodelete := make([]int, 0)
-
-	From[*VEvent](events, 0).
+	// For each event
+	FromArray(events, 0).
 		Filter(
 			func(event *VEvent) bool {
-
-				setOfTrue := Map(From[RemoveRule](cie.ToRemove.Rules, 0).
-					Filter(func(rule RemoveRule) bool {
-						for _, property := range event.ComponentBase.Properties {
-							if strings.Compare(property.BaseProperty.IANAToken, rule.KeyName) == 0 {
-								return true
-							}
-						}
-						return false
-					}),
+				// For each event
+				// Filter one by checking if set of bolleans has true and false or only false\
+				// if there is true event has to be omited
+				setOfBools := Map(
+					FromArray(cie.ToRemove.Rules, 0),
+					// for each deletion rule
+					// create cheking regex
+					// if regex returns true, set will point to filter event
 					func(rule RemoveRule) bool {
 						rgx := regexp.MustCompile(rule.Regex)
-						var name string
+						var value_to_check string
 
+						// get value of key that matches one to check
+						var i int
 						for _, property := range event.ComponentBase.Properties {
 							if strings.Compare(property.BaseProperty.IANAToken, rule.KeyName) == 0 {
-								name = property.Value
+								value_to_check = property.Value
 								break
 							}
+							i++
 						}
-						return rgx.MatchString(name)
-					},
-				).Stream().ToDistinct()
+						// if there was no maching key to pattern
+						// assume that event should not be filtered
+						if i < len(event.ComponentBase.Properties) {
+							return rgx.MatchString(value_to_check)
+						}
 
-				if setOfTrue.Contains(true) {
+						// if regex sets true, event will be added to set
+						return false
+					},
+				).
+					Stream().
+					ToDistinct()
+
+				// check if set is empty
+				if setOfBools.Contains(true) {
 					counter++
 					return false
 				}
-				// fmt.Println(setOfTrue.Contains(true))
 				return true
 			}).ForEach(func(event *VEvent) {
 		newCalendar.AddVEvent(event)
 	})
 
-	// for i, event := range events {
-	// 	for _, cmpnt := range event.ComponentBase.Properties {
-	// 		if cmpnt.BaseProperty.IANAToken == "SUMMARY" {
-	// 			if cmpnt.BaseProperty.Value == "AM - Wykład (B/1 Aula Główna)" ||
-	// 				cmpnt.BaseProperty.Value == "AM - Ćwiczenia (B/208)" {
-
-	// 				eventstodelete = append(eventstodelete, i)
-	// 				fmt.Println("Removed: '", "SUMMARY", cmpnt.BaseProperty.Value, "'")
-	// 			}
-	// 		}
-	// 	}
-	// }
-
-	// for _, num := range eventstodelete {
-	// 	events = RemoveIndexVEventArr(events, num)
-	// }
-
-	// for _, vevent := range events {
-	// 	newCalendar.AddVEvent(vevent)
-	// }
-
-	// fmt.Println("removed", len(counter))
 	newCalendar.SerializeTo(file2)
 	return counter
 }
-
-// func RemoveIndexVEventArr(s []*VEvent, index int) []*VEvent {
-// 	ret := make([]*VEvent, 0)
-// 	ret = append(ret, s[:index]...)
-// 	return append(ret, s[index+1:]...)
-// }
